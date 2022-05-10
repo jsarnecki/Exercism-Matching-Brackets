@@ -29,7 +29,7 @@ describe('Matching Brackets', () => {
     expect(isPaired('{[])')).toEqual(false);
   });
 
-  test.only('simple nested brackets', () => {
+  test('simple nested brackets', () => {
     expect(isPaired('{[]}')).toEqual(true);
   });
 
@@ -37,7 +37,7 @@ describe('Matching Brackets', () => {
     expect(isPaired('{}[]')).toEqual(true);
   });
 
-  test.only('paired and nested brackets', () => {
+  test('paired and nested brackets', () => {
     expect(isPaired('([{}({}[])])')).toEqual(true);
   });
 
