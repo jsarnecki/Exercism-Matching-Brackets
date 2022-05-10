@@ -28,74 +28,60 @@ export const isPaired = (str) => {
   }
 
   // Break string into indiv chars
-  const arr = str.split("");
+  let braketArr = str.split("");
+  const removedNonBrackets = [];
 
+  for (let i = 0; i < braketArr.length; i++) {
+    // If the string had more than brackets in it, go through and remove them
+    if (brackets[braketArr[i]]) {
+      removedNonBrackets.push(braketArr[i]);
+    }
+  }
 
-  if (arr[0] && brackets[arr[0]].closed) {
+  if (removedNonBrackets.length) {
+    braketArr = removedNonBrackets;
+  }
+
+  if (braketArr[0] && brackets[braketArr[0]]?.closed) {
     // Checks if the first bracket is closed, auto false
     return false;
   }
 
-  let closed = [];
+  const closed = [];
   let count = 0;
 
-  
-  // Loop thru and keep track of open brackets, finding the closing pairs
-  // When a bracket opens add the closing bracket to arr
-
-
-
-  //the next bracket can not be the closing bracket of this current bracket
-
-  for (let i = 0; i < arr.length; i++) {
-    if (brackets[arr[i]]) {
+  // When a bracket opens add the closing bracket to closed arr, unless it closes directly after
+  for (let i = 0; i < braketArr.length; i++) {
+    if (brackets[braketArr[i]]) {
+      // Checks if bracket exists
       count++;
-      let temp = brackets[arr[i]].opposite;
-      // The next bracket can not close the current bracket, skip it
-      if (!brackets[arr[i]].closed && temp !== arr[i + 1]) {
-        
-        closed.push(brackets[arr[i]].opposite);
+      let temp = brackets[braketArr[i]].opposite;
+      // Temp holds on to the opposite of current bracket to compare with the next index
+      if (!brackets[braketArr[i]].closed && temp !== braketArr[i + 1]) {
+        // If this bracket is the opening bracket, and the next bracket is not its closing bracket
+        closed.push(brackets[braketArr[i]].opposite);
       }
     }
   }
   
-  // When brackets begin closing, they must close in the same order they were added to array
-  // for (const b of arr) {
-
-  //   if (brackets[b]) {
-
-  //     if (brackets[b].closed && closed[0] === b) {
-
-  //       closed.shift();
-  //     }
-  //   }
-  // }
-
-
-  for (let i = 0; i < arr.length; i++) {
-
-    if (brackets[arr[i]].closed) {
-      // find closed brackets
-      let temp = brackets[arr[i]].opposite;
-
-      if (temp !== arr[i - 1] && arr[i] === closed[0]) {
-          // Check if bracket before was open
+  // When brackets begin closing, they must close in the same order they were added to braketArray
+  for (let i = 0; i < braketArr.length; i++) {
+    if (brackets[braketArr[i]]?.closed) {
+      // Find closed brackets
+      let temp = brackets[braketArr[i]].opposite;
+      // Temp holds on to the opposite of current bracket to compare with the next index
+      if (temp !== braketArr[i - 1] && braketArr[i] === closed[0]) {
+          // If this closed bracket was not open the index before && this closed bracket is next in line in closed arr
         closed.shift();
       }
     }
   }
 
-
-
-
-
-
-  let isEven = count % 2 === 0;
-
-  console.log("closed after", closed);
-  // console.log("isEven", isEven);
+  const isEven = count % 2 === 0;
+  // Checks if there were even amount of brackets
 
   if (closed.length === 0 && isEven) {
+    // To have matched up all the brackets, the closed arr should be empty
     return true;
   }
   return false;
